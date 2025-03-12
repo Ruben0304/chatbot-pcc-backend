@@ -7,10 +7,8 @@ from useCases.feedbackUseCase import give_feedback
 
 router = APIRouter()
 @router.post("/chat")
-async def chat_endpoint(request: Request):
-    data = await request.json()
-    user_message = data.get("message", "")
-    return sendMessage(user_message)
+async def chat_endpoint(message: str):
+    return sendMessage(message)
 
 
 @router.patch("/messages/{message_id}/feedback")
