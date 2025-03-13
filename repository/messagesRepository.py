@@ -10,7 +10,7 @@ from model.Message import Message, MessageCreate, FeedbackUpdate
 class MessageRepository:
     @staticmethod
     def _get_connection():
-        uri = "mongodb+srv://ruben:Zixelowe1@personal.yycznyk.mongodb.net/?retryWrites=true&w=majority&appName=personal"
+        uri = "mongodb+srv://ruben:zixelowe1@personal.yycznyk.mongodb.net/?retryWrites=true&w=majority&appName=personal"
 
         # Crear cliente sin usar ServerApi para mayor compatibilidad
         client = pymongo.MongoClient(uri)
