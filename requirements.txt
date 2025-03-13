@@ -2,5 +2,4 @@ fastapi
 cohere
 requests
 pydantic
-bson
 pymongo
