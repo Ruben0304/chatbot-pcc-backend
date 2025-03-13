@@ -1,118 +1,113 @@
-import json
-import os
 from datetime import datetime
 from typing import Dict, List, Optional
+from bson import ObjectId
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
 from model.Message import Message, MessageCreate, FeedbackUpdate
-
-JSON_FILE = "database/chatbot_pcc.json"
 
 class MessageRepository:
     @staticmethod
-    def _get_data() -> Dict:
-        # Crear el directorio si no existe
-        os.makedirs(os.path.dirname(JSON_FILE), exist_ok=True)
-
-        # Si el archivo no existe, crear uno vacío con estructura inicial
-        if not os.path.exists(JSON_FILE):
-            with open(JSON_FILE, 'w') as f:
-                json.dump({"messages": [], "last_id": 0}, f)
-
-        # Leer datos del archivo
-        with open(JSON_FILE, 'r') as f:
-            try:
-                return json.load(f)
-            except json.JSONDecodeError:
-                # Si el archivo está corrupto, crear uno nuevo
-                data = {"messages": [], "last_id": 0}
-                with open(JSON_FILE, 'w') as f:
-                    json.dump(data, f)
-                return data
+    def _get_connection():
+        uri = "mongodb+srv://ruben:Zixelowe1@personal.yycznyk.mongodb.net/?retryWrites=true&w=majority&appName=personal"
+        client = MongoClient(uri, server_api=ServerApi('1'))
+        db = client['chatbot_pcc']
+        return db.messages
 
     @staticmethod
-    def _save_data(data: Dict) -> None:
-        with open(JSON_FILE, 'w') as f:
-            json.dump(data, f, indent=2)
-
-    @staticmethod
-    def create_message(message: MessageCreate) -> int:
-        data = MessageRepository._get_data()
-
-        # Incrementar el último ID
-        message_id = data["last_id"] + 1
-        data["last_id"] = message_id
+    def create_message(message: MessageCreate) -> str:
+        collection = MessageRepository._get_connection()
 
         # Crear nuevo mensaje
         new_message = {
-            "id": message_id,
             "question": message.question,
             "answer": message.answer,
             "feedback": None,
             "feedback_type": None,
-            "created_at": datetime.now().isoformat()
+            "created_at": datetime.now()
         }
 
-        # Agregar el mensaje a la lista
-        data["messages"].append(new_message)
-
-        # Guardar los cambios
-        MessageRepository._save_data(data)
+        # Insertar el mensaje y obtener el ID
+        result = collection.insert_one(new_message)
+        message_id = str(result.inserted_id)
 
         return message_id
 
     @staticmethod
-    def update_feedback(message_id: int, feedback: FeedbackUpdate) -> int:
-        data = MessageRepository._get_data()
+    def update_feedback(message_id: str, feedback: FeedbackUpdate) -> str:
+        collection = MessageRepository._get_connection()
 
-        # Buscar el mensaje por ID
-        found = False
-        for message in data["messages"]:
-            if message["id"] == message_id:
-                message["feedback"] = feedback.feedback
-                message["feedback_type"] = feedback.feedback_type
-                found = True
-                break
+        # Convertir string ID a ObjectId para MongoDB
+        object_id = ObjectId(message_id)
 
-        if not found:
+        # Actualizar el mensaje
+        result = collection.update_one(
+            {"_id": object_id},
+            {"$set": {
+                "feedback": feedback.feedback,
+                "feedback_type": feedback.feedback_type
+            }}
+        )
+
+        if result.matched_count == 0:
             raise ValueError("Message not found")
 
-        # Guardar los cambios
-        MessageRepository._save_data(data)
-
         return message_id
 
     @staticmethod
-    def get_message(message_id: int) -> Message:
-        data = MessageRepository._get_data()
+    def get_message(message_id: str) -> Message:
+        collection = MessageRepository._get_connection()
 
-        # Buscar el mensaje por ID
-        for message in data["messages"]:
-            if message["id"] == message_id:
-                # Convertir el diccionario a un objeto Message
-                return Message(
-                    id=message["id"],
-                    question=message["question"],
-                    answer=message["answer"],
-                    feedback=message["feedback"],
-                    feedback_type=message["feedback_type"],
-                    created_at=message["created_at"]
-                )
+        # Convertir string ID a ObjectId para MongoDB
+        object_id = ObjectId(message_id)
 
-        raise ValueError("Message not found")
+        # Buscar el mensaje
+        message_data = collection.find_one({"_id": object_id})
+
+        if not message_data:
+            raise ValueError("Message not found")
+
+        # Convertir el documento de MongoDB a un objeto Message
+        return Message(
+            id=str(message_data["_id"]),
+            question=message_data["question"],
+            answer=message_data["answer"],
+            feedback=message_data.get("feedback"),
+            feedback_type=message_data.get("feedback_type"),
+            created_at=message_data["created_at"].isoformat() if isinstance(message_data["created_at"], datetime) else message_data["created_at"]
+        )
 
     @staticmethod
     def get_all_messages() -> List[Message]:
-        data = MessageRepository._get_data()
+        collection = MessageRepository._get_connection()
 
-        # Convertir todos los mensajes a objetos Message
+        # Obtener todos los mensajes
+        messages_data = collection.find()
+
+        # Convertir documentos a objetos Message
         messages = []
-        for message_data in data["messages"]:
+        for message_data in messages_data:
             messages.append(Message(
-                id=message_data["id"],
+                id=str(message_data["_id"]),
                 question=message_data["question"],
                 answer=message_data["answer"],
-                feedback=message_data["feedback"],
-                feedback_type=message_data["feedback_type"],
-                created_at=message_data["created_at"]
+                feedback=message_data.get("feedback"),
+                feedback_type=message_data.get("feedback_type"),
+                created_at=message_data["created_at"].isoformat() if isinstance(message_data["created_at"], datetime) else message_data["created_at"]
             ))
 
         return messages
+
+    @staticmethod
+    def delete_message(message_id: str) -> bool:
+        collection = MessageRepository._get_connection()
+
+        # Convertir string ID a ObjectId para MongoDB
+        object_id = ObjectId(message_id)
+
+        # Eliminar el mensaje
+        result = collection.delete_one({"_id": object_id})
+
+        if result.deleted_count == 0:
+            raise ValueError("Message not found")
+
+        return True
