@@ -1,0 +1,13 @@
+{
+  "messages": [
+    {
+      "id": 1,
+      "question": "hola",
+      "answer": "\u00a1Hola! Soy el asistente virtual del PCC en la CUJAE. \u00bfEn qu\u00e9 puedo ayudarte hoy?",
+      "feedback": null,
+      "feedback_type": null,
+      "created_at": "2025-03-12T19:45:15.724881"
+    }
+  ],
+  "last_id": 1
+}

@@ -13,7 +13,19 @@ def get_general_response(question: str) -> str:
             content=question,
             preamble=GENERAL_PROMPT,
         )
-        return response if response.lower() != "no" else ""
+        
+        # Intentar parsear la respuesta como JSON
+        try:
+            parsed_response = json.loads(response)
+            if parsed_response.get("is_general", False):
+                return parsed_response.get("response", "")
+            else:
+                return ""
+        except json.JSONDecodeError:
+            # Fallback para compatibilidad con versiones anteriores
+            print("Advertencia: Respuesta no está en formato JSON")
+            return response if response.lower() != "no" else ""
+            
     except Exception as e:
         print(f"Error en respuesta general: {str(e)}")
         return ""
