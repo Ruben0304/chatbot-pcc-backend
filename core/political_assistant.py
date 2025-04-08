@@ -14,24 +14,15 @@ def get_general_response(question: str) -> str:
             preamble=GENERAL_PROMPT,
         )
         
-        print(f"DEBUG - Raw response from Cohere: {response}")
-        
         # Intentar parsear la respuesta como JSON
         try:
-            # Si la respuesta ya es un string JSON, parsearlo
             parsed_response = json.loads(response)
-            print(f"DEBUG - Parsed JSON: {parsed_response}")
-            
             if parsed_response.get("is_general", False):
-                # Devolver solo el contenido del campo "response", no todo el JSON
-                extracted_response = parsed_response.get("response", "")
-                print(f"DEBUG - Extracted response: {extracted_response}")
-                return extracted_response
+                return parsed_response.get("response", "")
             else:
                 return ""
-        except json.JSONDecodeError as e:
+        except json.JSONDecodeError:
             # Fallback para compatibilidad con versiones anteriores
-            print(f"DEBUG - JSON decode error: {str(e)}")
             print("Advertencia: Respuesta no está en formato JSON")
             return response if response.lower() != "no" else ""
             
