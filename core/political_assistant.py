@@ -54,7 +54,7 @@ def get_api_data(endpoint: str) -> dict:
 def generate_final_answer(question: str, data: dict) -> str:
     """Genera respuesta usando Cohere con datos del API"""
     try:
-        info = json.dumps(data, ensure_ascii=False)[:2000]  # Limitar tamaño para el modelo
+        info = json.dumps(data, ensure_ascii=False)[:10000]  # Limitar tamaño para el modelo
         response = generate_cohere_text(
             content=question,
             preamble=ASSISTANT_PROMPT,
