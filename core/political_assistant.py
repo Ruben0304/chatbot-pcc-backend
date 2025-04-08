@@ -18,6 +18,7 @@ def get_general_response(question: str) -> str:
         try:
             parsed_response = json.loads(response)
             if parsed_response.get("is_general", False):
+                # Devolver solo el contenido del campo "response", no todo el JSON
                 return parsed_response.get("response", "")
             else:
                 return ""
