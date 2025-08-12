@@ -1,0 +1,252 @@
+{
+  "baseUrl": "https://part-back.onrender.com",
+  "endpoints": {
+    "militantes": {
+      "name": "militantes",
+      "description": "Obtiene información sobre los militantes",
+      "path": "/militantes",
+      "method": "GET",
+      "fields": [
+        {
+          "name": "id",
+          "type": "number",
+          "description": "Identificador único del militante"
+        },
+        {
+          "name": "firstname",
+          "type": "string",
+          "description": "Nombre del militante"
+        },
+        {
+          "name": "lastname",
+          "type": "string",
+          "description": "Apellido del militante"
+        },
+        {
+          "name": "email",
+          "type": "string",
+          "description": "Correo electrónico del militante"
+        },
+        {
+          "name": "organization",
+          "type": "string",
+          "description": "Organización a la que pertenece"
+        },
+        {
+          "name": "estado",
+          "type": "string",
+          "description": "Estado actual del militante"
+        },
+        {
+          "name": "address",
+          "type": "string",
+          "description": "Dirección del militante"
+        },
+        {
+          "name": "phone",
+          "type": "string",
+          "description": "Teléfono del militante"
+        },
+        {
+          "name": "core",
+          "type": "string",
+          "description": "Núcleo al que pertenece"
+        },
+        {
+          "name": "abscents",
+          "type": "number",
+          "description": "Número de ausencias"
+        }
+      ],
+      "keywords": [
+        "militantes",
+        "miembro",
+        "miembros",
+        "datos",
+        "persona",
+        "gente",
+        "información personal"
+      ]
+    },
+    "minutes-political": {
+      "name": "minutes-political",
+      "description": "Obtiene actas políticas",
+      "path": "/minutes-political",
+      "method": "GET",
+      "fields": [
+        {
+          "name": "id",
+          "type": "number",
+          "description": "Identificador único del acta"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Nombre del acta"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "description": "Estado del acta"
+        },
+        {
+          "name": "fecha",
+          "type": "string",
+          "description": "Fecha del acta"
+        },
+        {
+          "name": "hora",
+          "type": "string",
+          "description": "Hora del acta"
+        },
+        {
+          "name": "lugar",
+          "type": "string",
+          "description": "Lugar donde se realizó"
+        },
+        {
+          "name": "createdAt",
+          "type": "string",
+          "description": "Fecha de creación"
+        },
+        {
+          "name": "total",
+          "type": "number",
+          "description": "Total de participantes"
+        },
+        {
+          "name": "ausentes",
+          "type": "number",
+          "description": "Número de ausentes"
+        },
+        {
+          "name": "porciento",
+          "type": "number",
+          "description": "Porcentaje de asistencia"
+        },
+        {
+          "name": "total_trabajador",
+          "type": "number",
+          "description": "Total de trabajadores"
+        },
+        {
+          "name": "total_organismo",
+          "type": "number",
+          "description": "Total de organismos"
+        },
+        {
+          "name": "causa",
+          "type": "string",
+          "description": "Causa de la reunión"
+        },
+        {
+          "name": "tema",
+          "type": "string",
+          "description": "Tema principal"
+        },
+        {
+          "name": "planteamientos",
+          "type": "string",
+          "description": "Planteamientos realizados"
+        },
+        {
+          "name": "acuerdos",
+          "type": "string",
+          "description": "Acuerdos tomados"
+        },
+        {
+          "name": "valoracion",
+          "type": "string",
+          "description": "Valoración general"
+        },
+        {
+          "name": "name_orientador",
+          "type": "string",
+          "description": "Nombre del orientador"
+        },
+        {
+          "name": "name_secretario",
+          "type": "string",
+          "description": "Nombre del secretario"
+        },
+        {
+          "name": "core",
+          "type": "string",
+          "description": "Núcleo relacionado"
+        }
+      ],
+      "keywords": [
+        "actas",
+        "acta",
+        "políticas",
+        "reunión",
+        "reuniones",
+        "minutos",
+        "política",
+        "sesión"
+      ]
+    },
+    "core": {
+      "name": "core",
+      "description": "Obtiene información sobre el núcleo (core) y sus militantes",
+      "path": "/core",
+      "method": "GET",
+      "fields": [
+        {
+          "name": "id",
+          "type": "number",
+          "description": "Identificador único del núcleo"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Nombre del núcleo"
+        },
+        {
+          "name": "secretarioGeneral",
+          "type": "string",
+          "description": "Secretario General del núcleo"
+        },
+        {
+          "name": "secretarioFuncionamiento",
+          "type": "string",
+          "description": "Secretario de Funcionamiento"
+        },
+        {
+          "name": "comite",
+          "type": "string",
+          "description": "Comité al que pertenece"
+        },
+        {
+          "name": "militantes",
+          "type": "array",
+          "description": "Lista de militantes del núcleo"
+        },
+        {
+          "name": "actas",
+          "type": "array",
+          "description": "Actas del núcleo"
+        },
+        {
+          "name": "actas_cp",
+          "type": "array",
+          "description": "Actas del comité partidista"
+        },
+        {
+          "name": "computo",
+          "type": "object",
+          "description": "Cómputos del núcleo"
+        }
+      ],
+      "keywords": [
+        "núcleo",
+        "nucleos",
+        "core",
+        "organización",
+        "estructura",
+        "secretario",
+        "comité"
+      ]
+    }
+  }
+}
