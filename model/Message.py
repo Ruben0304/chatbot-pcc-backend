@@ -8,6 +8,9 @@ class MessageBase(BaseModel):
 class MessageCreate(MessageBase):
     pass  # No necesita campos adicionales para la creación
 
+class ChatRequest(BaseModel):
+    message: str
+
 class FeedbackUpdate(BaseModel):
     feedback: Optional[str] = None
     feedback_type: Optional[str] = None
